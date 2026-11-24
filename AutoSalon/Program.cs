@@ -27,6 +27,7 @@ namespace AutoSalon
                     case "3": ShowSalesTable(); Pause(); break;
                     case "4": AddPrice(prices, ref count, ReadDouble("Ціна авто (грн): ", 1, 100000000)); Console.WriteLine($"Лічильник у Main: {count}"); Pause(); break;
                     case "5": ShowPrices(prices, count); Pause(); break;
+                    case "7": ShowStatistics(prices, count); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
                     default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
                 }
@@ -48,6 +49,7 @@ namespace AutoSalon
             Console.WriteLine("3 — таблиця продажів за марками");
             Console.WriteLine("4 — додати ціну авто");
             Console.WriteLine("5 — показати ціни");
+            Console.WriteLine("7 — статистика цін");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -207,6 +209,53 @@ namespace AutoSalon
                 Console.WriteLine($"{i + 1,-5}{prices[i],15:F2}");
             }
             Console.WriteLine($"Усього записів: {count}");
+        }
+        // Знаходить найбільшу ціну та її індекс. Для порожнього набору index = -1
+        static void FindMax(double[] prices, int count, out double max, out int index)
+        {
+            if (count == 0)                  // порожній набір — обробляємо окремо
+            {
+                max = 0;
+                index = -1;
+                return;
+            }
+
+            max = prices[0];
+            index = 0;
+            for (int i = 1; i < count; i++)
+            {
+                if (prices[i] > max)
+                {
+                    max = prices[i];
+                    index = i;
+                }
+            }
+        }
+        // Обчислює суму та середню ціну через out-параметри
+        static void Statistics(double[] prices, int count, out double sum, out double average)
+        {
+            sum = 0;
+            for (int i = 0; i < count; i++)
+            {
+                sum += prices[i];
+            }
+            average = count > 0 ? sum / count : 0;   // без перевірки — ділення на нуль
+        }
+        // Виводить статистику цін: суму, середню та найдорожче авто
+        static void ShowStatistics(double[] prices, int count)
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Цін ще немає, статистику не порахувати.");
+                return;
+            }
+
+            Statistics(prices, count, out double sum, out double average);
+            FindMax(prices, count, out double max, out int index);
+
+            Console.WriteLine($"Сума цін:       {sum:F2} грн");
+            Console.WriteLine($"Середня ціна:   {average:F2} грн");
+            Console.WriteLine($"Найдорожче авто: №{index + 1}, {max:F2} грн");
         }
 
     }
