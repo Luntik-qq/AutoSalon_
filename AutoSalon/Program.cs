@@ -20,7 +20,7 @@ namespace AutoSalon
                 switch (choice)
                 {
                     case "1": ShowAbout(); Pause(); break;
-                    case "2": ShowValueTable(0, 5, 0.5); Pause(); break;
+                    case "2": RunValueTable(); Pause(); break;
                     case "3": ShowSalesTable(); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
                     default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
@@ -86,21 +86,11 @@ namespace AutoSalon
         {
             string[] brands = { "BMW", "Audi", "Toyota", "Skoda", "Renault" };
             string[] months = { "Січ", "Лют", "Бер", "Кві", "Тра", "Чер" };
+            // розміри таблиці питаємо в користувача
+            int rows = ReadInt($"Скільки марок показати (1–{brands.Length})? ", 1, brands.Length);
+            int cols = ReadInt($"Скільки місяців показати (1–{months.Length})? ", 1, months.Length);
 
-            //  розміри таблиці питаємо в користувача
-            Console.Write($"Скільки марок показати (1–{brands.Length})? ");
-            if (!int.TryParse(Console.ReadLine(), out int rows) || rows < 1 || rows > brands.Length)
-            {
-                Console.WriteLine("Помилка: потрібне ціле число в межах діапазону.");
-                return;                                   //  нічого не малюємо, повертаємось у меню
-            }
 
-            Console.Write($"Скільки місяців показати (1–{months.Length})? ");
-            if (!int.TryParse(Console.ReadLine(), out int cols) || cols < 1 || cols > months.Length)
-            {
-                Console.WriteLine("Помилка: потрібне ціле число в межах діапазону.");
-                return;
-            }
 
             Random random = new Random(16);               // фіксоване число — однакові дані при кожному запуску
             int[] colSums = new int[cols];                // суми по стовпцях
@@ -142,6 +132,58 @@ namespace AutoSalon
                 Console.Write($"{colSums[col],6}");
             }
             Console.WriteLine($"{total,8}");              // правий нижній кут
+        }
+        // Читає ціле число від min до max, перепитує при помилці
+        static int ReadInt(string prompt, int min, int max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (!int.TryParse(input, out int value))
+                {
+                    Console.WriteLine("Помилка: введіть ціле число.");
+                    continue;
+                }
+                if (value < min || value > max)
+                {
+                    Console.WriteLine($"Помилка: число має бути від {min} до {max}.");
+                    continue;
+                }
+                return value;
+            }
+        }
+
+        // Читає дробове число від min до max, перепитує при помилці
+        static double ReadDouble(string prompt, double min, double max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+
+                if (!double.TryParse(input, out double value))
+                {
+                    Console.WriteLine("Помилка: введіть число (дробову частину — через кому).");
+                    continue;
+                }
+                if (value < min || value > max)
+                {
+                    Console.WriteLine($"Помилка: число має бути від {min} до {max}.");
+                    continue;
+                }
+                return value;
+            }
+        }
+        // Питає межі та крок і будує таблицю залишкової вартості
+        static void RunValueTable()
+        {
+            double from = ReadDouble("Вік від (років): ", 0, 30);
+            double to = ReadDouble("Вік до (років): ", from, 30);      // кінець не менший за початок
+            double step = ReadDouble("Крок (років, напр. 0,5): ", 0.1, 10);
+            Console.WriteLine();
+            ShowValueTable(from, to, step);
         }
 
     }
