@@ -20,7 +20,7 @@ namespace AutoSalon
                 switch (choice)
                 {
                     case "1": ShowAbout(); Pause(); break;
-                    case "2": ShowValueTable(); Pause(); break;
+                    case "2": ShowValueTable(0, 5, 0.5); Pause(); break;
                     case "3": ShowSalesTable(); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
                     default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
@@ -62,12 +62,10 @@ namespace AutoSalon
             Console.WriteLine("Підсумок: середня ціна за марками, кількість проданих авто за місяць");
         }
         // Табулювання: залишкова вартість авто залежно від віку
-        static void ShowValueTable()
+        static void ShowValueTable(double from, double to, double step)
         {
             double price = 1000000;   // ціна нового авто, грн
-            double from = 0;          // вік від
-            double to = 5;            // вік до
-            double step = 0.5;        // крок
+           
 
             Console.WriteLine($"Залишкова вартість авто ціною {price} грн");
             Console.WriteLine($"{"Вік (років)",12}{"Вартість (грн)",17}");
