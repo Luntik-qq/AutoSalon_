@@ -26,6 +26,7 @@ namespace AutoSalon
                     case "2": RunValueTable(); Pause(); break;
                     case "3": ShowSalesTable(); Pause(); break;
                     case "4": AddPrice(prices, ref count, ReadDouble("Ціна авто (грн): ", 1, 100000000)); Console.WriteLine($"Лічильник у Main: {count}"); Pause(); break;
+                    case "5": ShowPrices(prices, count); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
                     default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
                 }
@@ -46,6 +47,7 @@ namespace AutoSalon
             Console.WriteLine("2 — таблиця залишкової вартості авто");
             Console.WriteLine("3 — таблиця продажів за марками");
             Console.WriteLine("4 — додати ціну авто");
+            Console.WriteLine("5 — показати ціни");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -189,6 +191,22 @@ namespace AutoSalon
             prices[count] = newPrice;
             count++;
             Console.WriteLine("Ціну додано.");
+        }
+        // Виводить ціни таблицею з номерами (до count)
+        static void ShowPrices(double[] prices, int count)
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Цін ще немає.");
+                return;
+            }
+
+            Console.WriteLine($"{"№",-5}{"Ціна (грн)",15}");
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine($"{i + 1,-5}{prices[i],15:F2}");
+            }
+            Console.WriteLine($"Усього записів: {count}");
         }
 
     }
