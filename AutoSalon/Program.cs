@@ -74,9 +74,14 @@ namespace AutoSalon
 
             for (double age = from; age <= to + 1e-9; age += step)
             {
-                double value = price * Math.Pow(0.88, age);   // щороку −12%
+                double value = CalculateValue(price, age);    // виклик методу, результат — у змінну
                 Console.WriteLine($"{age,12:F2}{value,17:F2}");
             }
+        }
+        // Обчислює залишкову вартість авто: щороку −12 % від ціни
+        static double CalculateValue(double price, double age)
+        {
+            return price * Math.Pow(0.88, age);
         }
         // Таблиця з двома входами: продажі авто за марками та місяцями
         static void ShowSalesTable()
