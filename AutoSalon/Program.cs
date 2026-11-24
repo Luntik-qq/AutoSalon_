@@ -32,7 +32,7 @@ namespace AutoSalon
                         Pause();
                         break;
                         case "3":
-                        Console.WriteLine("Поки не зроблено.");
+                        ShowSalesTable();
                         Pause();
                         break;
                         case "0":
@@ -85,6 +85,39 @@ namespace AutoSalon
             {
                 double value = price * Math.Pow(0.88, age);   // щороку −12%
                 Console.WriteLine($"{age,12:F2}{value,17:F2}");
+            }
+        }
+        // Таблиця з двома входами: продажі авто за марками та місяцями
+        static void ShowSalesTable()
+        {
+            string[] brands = { "BMW", "Audi", "Toyota", "Skoda", "Renault" };
+            string[] months = { "Січ", "Лют", "Бер", "Кві", "Тра", "Чер" };
+            Random random = new Random(16);   // фіксоване число — однакові дані при кожному запуску
+
+            Console.WriteLine("Кількість проданих авто за місяцями");
+
+            // шапка
+            Console.Write($"{"Марка",-10}");
+            for (int col = 0; col < months.Length; col++)
+            {
+                Console.Write($"{months[col],6}");
+            }
+            Console.WriteLine($"{"Разом",8}");
+
+            // рядки таблиці
+            for (int row = 0; row < brands.Length; row++)
+            {
+                int rowSum = 0;                          // підсумок рядка, обнуляється для кожної марки
+                Console.Write($"{brands[row],-10}");
+
+                for (int col = 0; col < months.Length; col++)
+                {
+                    int sold = random.Next(0, 10);       // продано від 0 до 9 авто
+                    Console.Write($"{sold,6}");
+                    rowSum += sold;
+                }
+
+                Console.WriteLine($"{rowSum,8}");        // останній стовпець — підсумок рядка
             }
         }
 
