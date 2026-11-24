@@ -44,7 +44,6 @@ namespace AutoSalon
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
-
         // Довідка: тема, сутність і поля застосунку
         static void ShowAbout()
         {
@@ -65,8 +64,6 @@ namespace AutoSalon
         static void ShowValueTable(double from, double to, double step)
         {
             double price = 1000000;   // ціна нового авто, грн
-           
-
             Console.WriteLine($"Залишкова вартість авто ціною {price} грн");
             Console.WriteLine($"{"Вік (років)",12}{"Вартість (грн)",17}");
 
@@ -89,26 +86,20 @@ namespace AutoSalon
             // розміри таблиці питаємо в користувача
             int rows = ReadInt($"Скільки марок показати (1–{brands.Length})? ", 1, brands.Length);
             int cols = ReadInt($"Скільки місяців показати (1–{months.Length})? ", 1, months.Length);
-
-
-
             Random random = new Random(16);               // фіксоване число — однакові дані при кожному запуску
             int[] colSums = new int[cols];                // суми по стовпцях
             int total = 0;                                // загальний підсумок
-
             Console.WriteLine();
             Console.WriteLine("Кількість проданих авто за місяцями");
-
             // шапка
             Console.Write($"{"Марка",-10}");
-            for (int col = 0; col < cols; col++)          
+            for (int col = 0; col < cols; col++)
             {                                             // стовпці: стільки місяців, скільки обрав користувач
                 Console.Write($"{months[col],6}");
             }
             Console.WriteLine($"{"Разом",8}");
-
             // рядки таблиці
-            for (int row = 0; row < rows; row++)          
+            for (int row = 0; row < rows; row++)
             {                                             // рядки: стільки марок, скільки обрав користувач
                 int rowSum = 0;
                 Console.Write($"{brands[row],-10}");
@@ -121,10 +112,8 @@ namespace AutoSalon
                     colSums[col] += sold;                 //  у копилку стовпця
                     total += sold;                        //  у загальну копилку
                 }
-
                 Console.WriteLine($"{rowSum,8}");
             }
-
             //  рядок підсумків
             Console.Write($"{"Разом",-10}");
             for (int col = 0; col < cols; col++)
@@ -154,7 +143,6 @@ namespace AutoSalon
                 return value;
             }
         }
-
         // Читає дробове число від min до max, перепитує при помилці
         static double ReadDouble(string prompt, double min, double max)
         {
@@ -190,5 +178,5 @@ namespace AutoSalon
 
 
 
-    
+
 }
