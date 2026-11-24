@@ -9,6 +9,9 @@ namespace AutoSalon
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            const int Capacity = 100;                    // місткість сховища
+            double[] prices = new double[Capacity];      // ціни авто
+            int count = 0;                               // скільки цін уже записано
             bool running = true;
 
             while (running)
@@ -22,6 +25,7 @@ namespace AutoSalon
                     case "1": ShowAbout(); Pause(); break;
                     case "2": RunValueTable(); Pause(); break;
                     case "3": ShowSalesTable(); Pause(); break;
+                    case "4": AddPrice(prices, ref count, ReadDouble("Ціна авто (грн): ", 1, 100000000)); Console.WriteLine($"Лічильник у Main: {count}"); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
                     default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
                 }
@@ -41,6 +45,7 @@ namespace AutoSalon
             Console.WriteLine("1 — довідка");
             Console.WriteLine("2 — таблиця залишкової вартості авто");
             Console.WriteLine("3 — таблиця продажів за марками");
+            Console.WriteLine("4 — додати ціну авто");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -172,6 +177,18 @@ namespace AutoSalon
             double step = ReadDouble("Крок (років, напр. 0,5): ", 0.1, 10);
             Console.WriteLine();
             ShowValueTable(from, to, step);
+        }
+        // Додає ціну в масив. Лічильник іде через ref, щоб його зміна була видна в Main
+        static void AddPrice(double[] prices, ref int count, double newPrice)
+        {
+            if (count == prices.Length)
+            {
+                Console.WriteLine("Місця більше немає.");
+                return;
+            }
+            prices[count] = newPrice;
+            count++;
+            Console.WriteLine("Ціну додано.");
         }
 
     }
