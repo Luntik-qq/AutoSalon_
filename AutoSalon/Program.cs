@@ -92,35 +92,66 @@ namespace AutoSalon
         {
             string[] brands = { "BMW", "Audi", "Toyota", "Skoda", "Renault" };
             string[] months = { "Січ", "Лют", "Бер", "Кві", "Тра", "Чер" };
-            Random random = new Random(16);   // фіксоване число — однакові дані при кожному запуску
 
+            //  розміри таблиці питаємо в користувача
+            Console.Write($"Скільки марок показати (1–{brands.Length})? ");
+            if (!int.TryParse(Console.ReadLine(), out int rows) || rows < 1 || rows > brands.Length)
+            {
+                Console.WriteLine("Помилка: потрібне ціле число в межах діапазону.");
+                return;                                   //  нічого не малюємо, повертаємось у меню
+            }
+
+            Console.Write($"Скільки місяців показати (1–{months.Length})? ");
+            if (!int.TryParse(Console.ReadLine(), out int cols) || cols < 1 || cols > months.Length)
+            {
+                Console.WriteLine("Помилка: потрібне ціле число в межах діапазону.");
+                return;
+            }
+
+            Random random = new Random(16);               // фіксоване число — однакові дані при кожному запуску
+            int[] colSums = new int[cols];                // суми по стовпцях
+            int total = 0;                                // загальний підсумок
+
+            Console.WriteLine();
             Console.WriteLine("Кількість проданих авто за місяцями");
 
             // шапка
             Console.Write($"{"Марка",-10}");
-            for (int col = 0; col < months.Length; col++)
-            {
+            for (int col = 0; col < cols; col++)          
+            {                                             // стовпці: стільки місяців, скільки обрав користувач
                 Console.Write($"{months[col],6}");
             }
             Console.WriteLine($"{"Разом",8}");
 
             // рядки таблиці
-            for (int row = 0; row < brands.Length; row++)
-            {
-                int rowSum = 0;                          // підсумок рядка, обнуляється для кожної марки
+            for (int row = 0; row < rows; row++)          
+            {                                             // рядки: стільки марок, скільки обрав користувач
+                int rowSum = 0;
                 Console.Write($"{brands[row],-10}");
 
-                for (int col = 0; col < months.Length; col++)
+                for (int col = 0; col < cols; col++)
                 {
-                    int sold = random.Next(0, 10);       // продано від 0 до 9 авто
+                    int sold = random.Next(0, 10);
                     Console.Write($"{sold,6}");
                     rowSum += sold;
+                    colSums[col] += sold;                 //  у копилку стовпця
+                    total += sold;                        //  у загальну копилку
                 }
 
-                Console.WriteLine($"{rowSum,8}");        // останній стовпець — підсумок рядка
+                Console.WriteLine($"{rowSum,8}");
             }
+
+            //  рядок підсумків
+            Console.Write($"{"Разом",-10}");
+            for (int col = 0; col < cols; col++)
+            {
+                Console.Write($"{colSums[col],6}");
+            }
+            Console.WriteLine($"{total,8}");              // правий нижній кут
         }
-
-
     }
+
+
+
+    
 }
