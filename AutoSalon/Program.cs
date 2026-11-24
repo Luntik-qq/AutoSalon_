@@ -5,53 +5,44 @@ namespace AutoSalon
 {
     internal class Program
     {
-       
-            static void Main(string[] args)
+
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+            bool running = true;
+
+            while (running)
             {
-                Console.OutputEncoding = Encoding.UTF8;
-                bool running = true;
-
-                while (running)
-                {
-                Console.WriteLine("=== Автосалон ===");
-                Console.WriteLine("1 — довідка");
-                Console.WriteLine("2 — таблиця залишкової вартості авто");
-                Console.WriteLine("3 — таблиця продажів за марками");
-                Console.WriteLine("0 — вихід");
-                Console.Write("Ваш вибір: ");
+                ShowMenu();
                 string choice = Console.ReadLine();
+                Console.WriteLine();
 
-                    switch (choice)
-                    {
-                        case "1":
-                        ShowAbout(); 
-                        Pause();
-                        break;
-                        case "2":
-                        ShowValueTable();
-                        Pause();
-                        break;
-                        case "3":
-                        ShowSalesTable();
-                        Pause();
-                        break;
-                        case "0":
-                        Console.WriteLine("До побачення.");
-                        running = false;
-                        break;
-                        default:
-                        Console.WriteLine("Немає такого пункту. Спробуйте ще раз.");
-                        Pause();
-                        break;
-                    }
+                switch (choice)
+                {
+                    case "1": ShowAbout(); Pause(); break;
+                    case "2": ShowValueTable(); Pause(); break;
+                    case "3": ShowSalesTable(); Pause(); break;
+                    case "0": Console.WriteLine("До побачення."); running = false; break;
+                    default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
                 }
             }
+        }
         // Пауза перед поверненням у меню та очищення екрана
         static void Pause()
         {
             Console.WriteLine("\nНатисніть будь-яку клавішу...");
             Console.ReadKey(true);
             Console.Clear();
+        }
+        // Виведення головного меню
+        static void ShowMenu()
+        {
+            Console.WriteLine("=== Автосалон ===");
+            Console.WriteLine("1 — довідка");
+            Console.WriteLine("2 — таблиця залишкової вартості авто");
+            Console.WriteLine("3 — таблиця продажів за марками");
+            Console.WriteLine("0 — вихід");
+            Console.Write("Ваш вибір: ");
         }
 
         // Довідка: тема, сутність і поля застосунку
@@ -149,6 +140,7 @@ namespace AutoSalon
             }
             Console.WriteLine($"{total,8}");              // правий нижній кут
         }
+
     }
 
 
