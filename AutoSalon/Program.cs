@@ -27,6 +27,7 @@ namespace AutoSalon
                     case "3": ShowSalesTable(); Pause(); break;
                     case "4": AddPrice(prices, ref count, ReadDouble("Ціна авто (грн): ", 1, 100000000)); Console.WriteLine($"Лічильник у Main: {count}"); Pause(); break;
                     case "5": ShowPrices(prices, count); Pause(); break;
+                    case "6": ShowPrices(prices, count); RemoveAt(prices, ref count, ReadInt("Номер для видалення: ", 1, Capacity) - 1); Pause(); break;
                     case "7": ShowStatistics(prices, count); Pause(); break;
                     case "8": RunTypeExperiment(); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
@@ -50,6 +51,7 @@ namespace AutoSalon
             Console.WriteLine("3 — таблиця продажів за марками");
             Console.WriteLine("4 — додати ціну авто");
             Console.WriteLine("5 — показати ціни");
+            Console.WriteLine("6 — видалити ціну за номером");
             Console.WriteLine("7 — статистика цін");
             Console.WriteLine("8 — дослід: значимий і посилальний тип");
             Console.WriteLine("0 — вихід");
@@ -288,6 +290,22 @@ namespace AutoSalon
             Console.WriteLine($"  до виклику:  prices[0] = {testPrices[0]}");
             ChangeFirstPrice(testPrices);
             Console.WriteLine($"  після виклику: prices[0] = {testPrices[0]}   ← змінилось");
+        }
+        // Видаляє елемент за індексом зі зсувом решти вліво; лічильник зменшується через ref
+        static void RemoveAt(double[] values, ref int count, int index)
+        {
+            if (index < 0 || index >= count)
+            {
+                Console.WriteLine("Помилка: запису з таким номером немає. Нічого не змінено.");
+                return;
+            }
+
+            for (int i = index; i < count - 1; i++)
+            {
+                values[i] = values[i + 1];      // кожен наступний стає на місце попереднього
+            }
+            count--;
+            Console.WriteLine("Запис видалено.");
         }
 
     }
