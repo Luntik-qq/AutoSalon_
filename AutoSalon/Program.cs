@@ -206,7 +206,6 @@ namespace AutoSalon
                 Console.WriteLine("Цін ще немає.");
                 return;
             }
-
             Console.WriteLine($"{"№",-5}{"Ціна (грн)",15}");
             for (int i = 0; i < count; i++)
             {
@@ -223,7 +222,6 @@ namespace AutoSalon
                 index = -1;
                 return;
             }
-
             max = prices[0];
             index = 0;
             for (int i = 1; i < count; i++)
@@ -253,10 +251,8 @@ namespace AutoSalon
                 Console.WriteLine("Цін ще немає, статистику не порахувати.");
                 return;
             }
-
             Statistics(prices, count, out double sum, out double average);
             FindMax(prices, count, out double max, out int index);
-
             Console.WriteLine($"Сума цін:       {sum:F2} грн");
             Console.WriteLine($"Середня ціна:   {average:F2} грн");
             Console.WriteLine($"Найдорожче авто: №{index + 1}, {max:F2} грн");
@@ -267,14 +263,12 @@ namespace AutoSalon
             number = number + 100;
             Console.WriteLine($"  усередині методу: number = {number}");
         }
-
         // Змінює перший елемент масиву — зміна видна ззовні
         static void ChangeFirstPrice(double[] prices)
         {
             prices[0] = prices[0] + 100;
             Console.WriteLine($"  усередині методу: prices[0] = {prices[0]}");
         }
-
         // Дослід: значимий тип (int) передається копією, масив — посиланням
         static void RunTypeExperiment()
         {
@@ -283,7 +277,6 @@ namespace AutoSalon
             Console.WriteLine($"  до виклику:  number = {number}");
             TryChangeNumber(number);
             Console.WriteLine($"  після виклику: number = {number}   ← не змінилось");
-
             Console.WriteLine();
             Console.WriteLine("2) Посилальний тип — масив:");
             double[] testPrices = { 50, 70, 90 };
@@ -299,7 +292,6 @@ namespace AutoSalon
                 Console.WriteLine("Помилка: запису з таким номером немає. Нічого не змінено.");
                 return;
             }
-
             for (int i = index; i < count - 1; i++)
             {
                 values[i] = values[i + 1];      // кожен наступний стає на місце попереднього
