@@ -28,6 +28,7 @@ namespace AutoSalon
                     case "4": AddPrice(prices, ref count, ReadDouble("Ціна авто (грн): ", 1, 100000000)); Console.WriteLine($"Лічильник у Main: {count}"); Pause(); break;
                     case "5": ShowPrices(prices, count); Pause(); break;
                     case "7": ShowStatistics(prices, count); Pause(); break;
+                    case "8": RunTypeExperiment(); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
                     default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
                 }
@@ -50,6 +51,7 @@ namespace AutoSalon
             Console.WriteLine("4 — додати ціну авто");
             Console.WriteLine("5 — показати ціни");
             Console.WriteLine("7 — статистика цін");
+            Console.WriteLine("8 — дослід: значимий і посилальний тип");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         }
@@ -256,6 +258,36 @@ namespace AutoSalon
             Console.WriteLine($"Сума цін:       {sum:F2} грн");
             Console.WriteLine($"Середня ціна:   {average:F2} грн");
             Console.WriteLine($"Найдорожче авто: №{index + 1}, {max:F2} грн");
+        }
+        // Намагається змінити int-параметр без ref — змінює лише копію
+        static void TryChangeNumber(int number)
+        {
+            number = number + 100;
+            Console.WriteLine($"  усередині методу: number = {number}");
+        }
+
+        // Змінює перший елемент масиву — зміна видна ззовні
+        static void ChangeFirstPrice(double[] prices)
+        {
+            prices[0] = prices[0] + 100;
+            Console.WriteLine($"  усередині методу: prices[0] = {prices[0]}");
+        }
+
+        // Дослід: значимий тип (int) передається копією, масив — посиланням
+        static void RunTypeExperiment()
+        {
+            Console.WriteLine("1) Значимий тип int, без ref:");
+            int number = 50;
+            Console.WriteLine($"  до виклику:  number = {number}");
+            TryChangeNumber(number);
+            Console.WriteLine($"  після виклику: number = {number}   ← не змінилось");
+
+            Console.WriteLine();
+            Console.WriteLine("2) Посилальний тип — масив:");
+            double[] testPrices = { 50, 70, 90 };
+            Console.WriteLine($"  до виклику:  prices[0] = {testPrices[0]}");
+            ChangeFirstPrice(testPrices);
+            Console.WriteLine($"  після виклику: prices[0] = {testPrices[0]}   ← змінилось");
         }
 
     }
