@@ -304,6 +304,7 @@ namespace AutoSalon
 
             Console.WriteLine(new string('-', 92));
             Console.WriteLine($"Записів: {count}.");
+            ShowSummary();
         }
         // Заповнює сховище 6 готовими записами без запитань
         static void SeedCars()
@@ -322,6 +323,54 @@ namespace AutoSalon
             StoreCar("WBAJA7C50KB654321", "BMW", 5, 2022, 25000, "білий", 1650000, true);
 
             Console.WriteLine($"Додано 6 тестових записів. Усього записів: {count}.");
+        }
+        // Середня ціна авто заданої марки. Якщо таких авто немає — 0 (без ділення на нуль)
+        static double AveragePriceByBrand(string[] brands, double[] prices, int count, string brand)
+        {
+            double sum = 0;
+            int n = 0;
+            for (int i = 0; i < count; i++)
+            {
+                if (brands[i].ToLower() == brand.ToLower())   // порівнюємо без урахування регістру
+                {
+                    sum += prices[i];
+                    n++;
+                }
+            }
+            return n > 0 ? sum / n : 0;
+        }
+        // Кількість проданих авто
+        static int CountSold(bool[] sold, int count)
+        {
+            int n = 0;
+            for (int i = 0; i < count; i++)
+            {
+                if (sold[i]) n++;
+            }
+            return n;
+        }
+        // Виводить підсумки під таблицею: середня ціна за марками та кількість проданих
+        static void ShowSummary()
+        {
+            Console.WriteLine("Середня ціна за марками:");
+            for (int i = 0; i < count; i++)
+            {
+                bool seenBefore = false;                       // чи зустрічалась ця марка раніше
+                for (int j = 0; j < i; j++)
+                {
+                    if (brands[j].ToLower() == brands[i].ToLower())
+                    {
+                        seenBefore = true;
+                        break;                                 // break у циклі for — вихід із циклу
+                    }
+                }
+                if (!seenBefore)
+                {
+                    double avg = AveragePriceByBrand(brands, prices, count, brands[i]);
+                    Console.WriteLine($"  {brands[i],-12}{avg,15:F2} грн");
+                }
+            }
+            Console.WriteLine($"Продано авто: {CountSold(sold, count)} з {count}.");
         }
     }
 
