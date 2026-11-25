@@ -4,32 +4,48 @@ using System.Text;
 namespace AutoSalon
 {
     internal class Program
+
     {
+        // ===== Сховище записів «Автомобіль»: паралельні масиви =====
+        const int Capacity = 100;                          // місткість сховища (не змінюється)
+        static int[] ids = new int[Capacity];              // номер запису — призначає програма
+        static string[] vins = new string[Capacity];       // VIN-код (17 символів)
+        static string[] brands = new string[Capacity];     // марка
+        static int[] modelCodes = new int[Capacity];       // код моделі з довідника (довідник — у ЛР12)
+        static int[] years = new int[Capacity];            // рік випуску
+        static int[] mileages = new int[Capacity];         // пробіг, км
+        static string[] colors = new string[Capacity];     // колір
+        static double[] prices = new double[Capacity];     // ціна, грн
+        static bool[] sold = new bool[Capacity];           // чи проданий
+        static int count = 0;                              // скільки записів зайнято
+        static int nextId = 1;                             // номер для наступного запису
 
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
-            const int Capacity = 100;                    // місткість сховища
-            double[] prices = new double[Capacity];      // ціни авто
-            int count = 0;                               // скільки цін уже записано
             bool running = true;
 
             while (running)
             {
-                ShowMenu();
+                ShowMenu(); 
                 string choice = Console.ReadLine();
                 Console.WriteLine();
 
                 switch (choice)
                 {
-                    case "1": ShowAbout(); Pause(); break;
-                    case "2": RunValueTable(); Pause(); break;
-                    case "3": ShowSalesTable(); Pause(); break;
-                    case "4": AddPrice(prices, ref count, ReadDouble("Ціна авто (грн): ", 1, 100000000)); Console.WriteLine($"Лічильник у Main: {count}"); Pause(); break;
-                    case "5": ShowPrices(prices, count); Pause(); break;
-                    case "6": ShowPrices(prices, count); RemoveAt(prices, ref count, ReadInt("Номер для видалення: ", 1, Capacity) - 1); Pause(); break;
-                    case "7": ShowStatistics(prices, count); Pause(); break;
-                    case "8": RunTypeExperiment(); Pause(); break;
+                    case "1": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "2": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "3":
+                    case "4":
+                    case "5":
+                    case "6":
+                    case "7":
+                    case "8":
+                    case "9": Console.WriteLine("Цей пункт з'явиться в наступних роботах."); Pause(); break;
+                    case "10": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "11": ShowAbout(); Pause(); break;
+                    case "12": RunValueTable(); Pause(); break;
+                    case "13": ShowSalesTable(); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
                     default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
                 }
@@ -46,16 +62,22 @@ namespace AutoSalon
         static void ShowMenu()
         {
             Console.WriteLine("=== Автосалон ===");
-            Console.WriteLine("1 — довідка");
-            Console.WriteLine("2 — таблиця залишкової вартості авто");
-            Console.WriteLine("3 — таблиця продажів за марками");
-            Console.WriteLine("4 — додати ціну авто");
-            Console.WriteLine("5 — показати ціни");
-            Console.WriteLine("6 — видалити ціну за номером");
-            Console.WriteLine("7 — статистика цін");
-            Console.WriteLine("8 — дослід: значимий і посилальний тип");
+            Console.WriteLine("1 — показати всі записи");
+            Console.WriteLine("2 — додати запис");
+            Console.WriteLine("3 — знайти за умовою");
+            Console.WriteLine("4 — змінити запис");
+            Console.WriteLine("5 — видалити запис");
+            Console.WriteLine("6 — зведена таблиця");
+            Console.WriteLine("7 — зберегти у файл");
+            Console.WriteLine("8 — завантажити з файлу");
+            Console.WriteLine("9 — експорт у CSV");
+            Console.WriteLine("10 — заповнити тестовими записами");
+            Console.WriteLine("11 — довідка");
+            Console.WriteLine("12 — таблиця залишкової вартості авто");
+            Console.WriteLine("13 — таблиця продажів за марками");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
+        
         }
         // Довідка: тема, сутність і поля застосунку
         static void ShowAbout()
@@ -186,120 +208,6 @@ namespace AutoSalon
             Console.WriteLine();
             ShowValueTable(from, to, step);
         }
-        // Додає ціну в масив. Лічильник іде через ref, щоб його зміна була видна в Main
-        static void AddPrice(double[] prices, ref int count, double newPrice)
-        {
-            if (count == prices.Length)
-            {
-                Console.WriteLine("Місця більше немає.");
-                return;
-            }
-            prices[count] = newPrice;
-            count++;
-            Console.WriteLine("Ціну додано.");
-        }
-        // Виводить ціни таблицею з номерами (до count)
-        static void ShowPrices(double[] prices, int count)
-        {
-            if (count == 0)
-            {
-                Console.WriteLine("Цін ще немає.");
-                return;
-            }
-            Console.WriteLine($"{"№",-5}{"Ціна (грн)",15}");
-            for (int i = 0; i < count; i++)
-            {
-                Console.WriteLine($"{i + 1,-5}{prices[i],15:F2}");
-            }
-            Console.WriteLine($"Усього записів: {count}");
-        }
-        // Знаходить найбільшу ціну та її індекс. Для порожнього набору index = -1
-        static void FindMax(double[] prices, int count, out double max, out int index)
-        {
-            if (count == 0)                  // порожній набір — обробляємо окремо
-            {
-                max = 0;
-                index = -1;
-                return;
-            }
-            max = prices[0];
-            index = 0;
-            for (int i = 1; i < count; i++)
-            {
-                if (prices[i] > max)
-                {
-                    max = prices[i];
-                    index = i;
-                }
-            }
-        }
-        // Обчислює суму та середню ціну через out-параметри
-        static void Statistics(double[] prices, int count, out double sum, out double average)
-        {
-            sum = 0;
-            for (int i = 0; i < count; i++)
-            {
-                sum += prices[i];
-            }
-            average = count > 0 ? sum / count : 0;   // без перевірки — ділення на нуль
-        }
-        // Виводить статистику цін: суму, середню та найдорожче авто
-        static void ShowStatistics(double[] prices, int count)
-        {
-            if (count == 0)
-            {
-                Console.WriteLine("Цін ще немає, статистику не порахувати.");
-                return;
-            }
-            Statistics(prices, count, out double sum, out double average);
-            FindMax(prices, count, out double max, out int index);
-            Console.WriteLine($"Сума цін:       {sum:F2} грн");
-            Console.WriteLine($"Середня ціна:   {average:F2} грн");
-            Console.WriteLine($"Найдорожче авто: №{index + 1}, {max:F2} грн");
-        }
-        // Намагається змінити int-параметр без ref — змінює лише копію
-        static void TryChangeNumber(int number)
-        {
-            number = number + 100;
-            Console.WriteLine($"  усередині методу: number = {number}");
-        }
-        // Змінює перший елемент масиву — зміна видна ззовні
-        static void ChangeFirstPrice(double[] prices)
-        {
-            prices[0] = prices[0] + 100;
-            Console.WriteLine($"  усередині методу: prices[0] = {prices[0]}");
-        }
-        // Дослід: значимий тип (int) передається копією, масив — посиланням
-        static void RunTypeExperiment()
-        {
-            Console.WriteLine("1) Значимий тип int, без ref:");
-            int number = 50;
-            Console.WriteLine($"  до виклику:  number = {number}");
-            TryChangeNumber(number);
-            Console.WriteLine($"  після виклику: number = {number}   ← не змінилось");
-            Console.WriteLine();
-            Console.WriteLine("2) Посилальний тип — масив:");
-            double[] testPrices = { 50, 70, 90 };
-            Console.WriteLine($"  до виклику:  prices[0] = {testPrices[0]}");
-            ChangeFirstPrice(testPrices);
-            Console.WriteLine($"  після виклику: prices[0] = {testPrices[0]}   ← змінилось");
-        }
-        // Видаляє елемент за індексом зі зсувом решти вліво; лічильник зменшується через ref
-        static void RemoveAt(double[] values, ref int count, int index)
-        {
-            if (index < 0 || index >= count)
-            {
-                Console.WriteLine("Помилка: запису з таким номером немає. Нічого не змінено.");
-                return;
-            }
-            for (int i = index; i < count - 1; i++)
-            {
-                values[i] = values[i + 1];      // кожен наступний стає на місце попереднього
-            }
-            count--;
-            Console.WriteLine("Запис видалено.");
-        }
-
     }
 
 
