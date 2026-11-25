@@ -213,7 +213,7 @@ namespace AutoSalon
                 Console.WriteLine("Помилка: значення не може бути порожнім.");
             }
         }
-
+      
         // Читає відповідь «так/ні», повертає true або false
         static bool ReadYesNo(string prompt)
         {
@@ -247,7 +247,6 @@ namespace AutoSalon
                 Console.WriteLine("Сховище заповнене, видаліть щось зайве.");
                 return;
             }
-
             // 1) збираємо всі поля в локальні змінні
             string vin = ReadText("VIN (17 символів): ");
             while (vin.Length != 17)
@@ -262,7 +261,6 @@ namespace AutoSalon
             string color = ReadText("Колір: ");
             double price = ReadDouble("Ціна, грн: ", 1, 100000000);
             bool isSold = ReadYesNo("Чи проданий (так/ні): ");
-
             // 2) записуємо в масиви
             StoreCar(vin, brand, modelCode, year, mileage, color, price, isSold);
 
@@ -292,16 +290,13 @@ namespace AutoSalon
                 Console.WriteLine("Записів поки немає.");
                 return;
             }
-
             Console.WriteLine($"{"№",4} {"VIN",-18}{"Марка",-12}{"Модель",7}{"Рік",6}{"Пробіг",9}  {"Колір",-10}{"Ціна, грн",13}{"Продано",9}");
             Console.WriteLine(new string('-', 92));
-
             for (int i = 0; i < count; i++)                 // до count, а не до Capacity
             {
                 string mark = sold[i] ? "так" : "ні";
                 Console.WriteLine($"{ids[i],4} {vins[i],-18}{brands[i],-12}{modelCodes[i],7}{years[i],6}{mileages[i],9}  {colors[i],-10}{prices[i],13:F2}{mark,9}");
             }
-
             Console.WriteLine(new string('-', 92));
             Console.WriteLine($"Записів: {count}.");
             ShowSummary();
@@ -314,7 +309,6 @@ namespace AutoSalon
                 Console.WriteLine("Недостатньо місця для тестових записів.");
                 return;
             }
-
             StoreCar("WBA3A5C51CF256985", "BMW", 3, 2019, 85000, "чорний", 950000, true);
             StoreCar("WAUZZZ4G7EN123456", "Audi", 6, 2017, 120000, "сірий", 780000, false);
             StoreCar("JTDBR32E720045678", "Toyota", 12, 2021, 40000, "білий", 1150000, false);
@@ -373,8 +367,4 @@ namespace AutoSalon
             Console.WriteLine($"Продано авто: {CountSold(sold, count)} з {count}.");
         }
     }
-
-
-
-
 }
