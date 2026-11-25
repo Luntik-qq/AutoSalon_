@@ -215,21 +215,9 @@ namespace AutoSalon
         }
       
         // Читає відповідь «так/ні», повертає true або false
-        static bool ReadYesNo(string prompt)
-        {
-            while (true)
-            {
-                Console.Write(prompt);
-                string input = Console.ReadLine();
-                if (input != null)
-                {
-                    input = input.Trim().ToLower();   // «ТАК», « Так » → «так»
-                    if (input == "так" || input == "т") return true;
-                    if (input == "ні" || input == "н") return false;
-                }
-                Console.WriteLine("Помилка: введіть «так» або «ні».");
-            }
-        }
+       
+            
+        
         // Питає межі та крок і будує таблицю залишкової вартості
         static void RunValueTable()
         {
@@ -365,6 +353,22 @@ namespace AutoSalon
                 }
             }
             Console.WriteLine($"Продано авто: {CountSold(sold, count)} з {count}.");
+        }
+        // Читає відповідь «так/ні», повертає true або false
+        static bool ReadYesNo(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+                if (input != null)
+                {
+                    input = input.Trim().ToLower();
+                    if (input.StartsWith("т") || input.StartsWith("д") || input.StartsWith("y")) return true;    // так / да / yes
+                    if (input.StartsWith("н") || input.StartsWith("n")) return false;                            // ні / нет / no
+                }
+                Console.WriteLine("Помилка: введіть «так» або «ні».");
+            }
         }
     }
 }
