@@ -33,7 +33,7 @@ namespace AutoSalon
 
                 switch (choice)
                 {
-                    case "1": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "1": ShowAllCars(); Pause(); break;
                     case "2": AddCar(); Pause(); break;
                     case "3":
                     case "4":
@@ -278,6 +278,27 @@ namespace AutoSalon
             nextId++;
 
             Console.WriteLine($"Додано авто №{ids[count - 1]}.");   // count уже збільшили, тому -1
+        }
+        // Виводить усі авто таблицею з вирівняними стовпцями
+        static void ShowAllCars()
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Записів поки немає.");
+                return;
+            }
+
+            Console.WriteLine($"{"№",4} {"VIN",-18}{"Марка",-12}{"Модель",7}{"Рік",6}{"Пробіг",9}  {"Колір",-10}{"Ціна, грн",13}{"Продано",9}");
+            Console.WriteLine(new string('-', 92));
+
+            for (int i = 0; i < count; i++)                 // до count, а не до Capacity
+            {
+                string mark = sold[i] ? "так" : "ні";
+                Console.WriteLine($"{ids[i],4} {vins[i],-18}{brands[i],-12}{modelCodes[i],7}{years[i],6}{mileages[i],9}  {colors[i],-10}{prices[i],13:F2}{mark,9}");
+            }
+
+            Console.WriteLine(new string('-', 92));
+            Console.WriteLine($"Записів: {count}.");
         }
     }
 
