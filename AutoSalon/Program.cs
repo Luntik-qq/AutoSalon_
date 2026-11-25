@@ -23,6 +23,8 @@ namespace AutoSalon
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;     // щоб правильно читалися українські літери (і, ї, є)
+
             bool running = true;
 
             while (running)
@@ -145,7 +147,7 @@ namespace AutoSalon
                     Console.Write($"{sold,6}");
                     rowSum += sold;
                     colSums[col] += sold;                 //  у копилку стовпця
-                    total += sold;                        //  у загальну копилку
+                    total += sold;                        //  у загальну копилку.
                 }
                 Console.WriteLine($"{rowSum,8}");
             }
