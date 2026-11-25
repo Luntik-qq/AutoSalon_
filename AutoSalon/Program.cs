@@ -34,7 +34,7 @@ namespace AutoSalon
                 switch (choice)
                 {
                     case "1": Console.WriteLine("Поки не зроблено."); Pause(); break;
-                    case "2": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "2": AddCar(); Pause(); break;
                     case "3":
                     case "4":
                     case "5":
@@ -199,6 +199,37 @@ namespace AutoSalon
                 return value;
             }
         }
+        // Читає непорожній текст, перепитує при порожньому введенні
+        static string ReadText(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(input))
+                {
+                    return input.Trim();          // Trim прибирає пробіли по краях
+                }
+                Console.WriteLine("Помилка: значення не може бути порожнім.");
+            }
+        }
+
+        // Читає відповідь «так/ні», повертає true або false
+        static bool ReadYesNo(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine();
+                if (input != null)
+                {
+                    input = input.Trim().ToLower();   // «ТАК», « Так » → «так»
+                    if (input == "так" || input == "т") return true;
+                    if (input == "ні" || input == "н") return false;
+                }
+                Console.WriteLine("Помилка: введіть «так» або «ні».");
+            }
+        }
         // Питає межі та крок і будує таблицю залишкової вартості
         static void RunValueTable()
         {
@@ -207,6 +238,46 @@ namespace AutoSalon
             double step = ReadDouble("Крок (років, напр. 0,5): ", 0.1, 10);
             Console.WriteLine();
             ShowValueTable(from, to, step);
+        }
+        // Додає новий автомобіль: збирає поля з перевіркою, номер призначає програма
+        static void AddCar()
+        {
+            if (count == Capacity)                         // перевірка ДО запису
+            {
+                Console.WriteLine("Сховище заповнене, видаліть щось зайве.");
+                return;
+            }
+
+            // 1) збираємо всі поля в локальні змінні
+            string vin = ReadText("VIN (17 символів): ");
+            while (vin.Length != 17)
+            {
+                Console.WriteLine("Помилка: VIN має містити рівно 17 символів.");
+                vin = ReadText("VIN (17 символів): ");
+            }
+            string brand = ReadText("Марка: ");
+            int modelCode = ReadInt("Код моделі (1–99): ", 1, 99);
+            int year = ReadInt("Рік випуску (1950–2026): ", 1950, 2026);
+            int mileage = ReadInt("Пробіг, км (0–1000000): ", 0, 1000000);
+            string color = ReadText("Колір: ");
+            double price = ReadDouble("Ціна, грн: ", 1, 100000000);
+            bool isSold = ReadYesNo("Чи проданий (так/ні): ");
+
+            // 2) записуємо в усі масиви під одним індексом count
+            ids[count] = nextId;
+            vins[count] = vin.ToUpper();
+            brands[count] = brand;
+            modelCodes[count] = modelCode;
+            years[count] = year;
+            mileages[count] = mileage;
+            colors[count] = color;
+            prices[count] = price;
+            sold[count] = isSold;
+
+            count++;                                       // тільки ПІСЛЯ присвоєнь
+            nextId++;
+
+            Console.WriteLine($"Додано авто №{ids[count - 1]}.");   // count уже збільшили, тому -1
         }
     }
 
