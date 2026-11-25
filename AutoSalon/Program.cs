@@ -42,7 +42,7 @@ namespace AutoSalon
                     case "7":
                     case "8":
                     case "9": Console.WriteLine("Цей пункт з'явиться в наступних роботах."); Pause(); break;
-                    case "10": Console.WriteLine("Поки не зроблено."); Pause(); break;
+                    case "10": SeedCars(); Pause(); break;
                     case "11": ShowAbout(); Pause(); break;
                     case "12": RunValueTable(); Pause(); break;
                     case "13": ShowSalesTable(); Pause(); break;
@@ -263,7 +263,14 @@ namespace AutoSalon
             double price = ReadDouble("Ціна, грн: ", 1, 100000000);
             bool isSold = ReadYesNo("Чи проданий (так/ні): ");
 
-            // 2) записуємо в усі масиви під одним індексом count
+            // 2) записуємо в масиви
+            StoreCar(vin, brand, modelCode, year, mileage, color, price, isSold);
+
+            Console.WriteLine($"Додано авто №{ids[count - 1]}.");   // count уже збільшили, тому -1
+        }
+        // Записує одне авто в усі масиви під індексом count. Єдине місце, де заповнюються масиви
+        static void StoreCar(string vin, string brand, int modelCode, int year, int mileage, string color, double price, bool isSold)
+        {
             ids[count] = nextId;
             vins[count] = vin.ToUpper();
             brands[count] = brand;
@@ -274,10 +281,8 @@ namespace AutoSalon
             prices[count] = price;
             sold[count] = isSold;
 
-            count++;                                       // тільки ПІСЛЯ присвоєнь
+            count++;                 // тільки ПІСЛЯ присвоєнь
             nextId++;
-
-            Console.WriteLine($"Додано авто №{ids[count - 1]}.");   // count уже збільшили, тому -1
         }
         // Виводить усі авто таблицею з вирівняними стовпцями
         static void ShowAllCars()
@@ -299,6 +304,24 @@ namespace AutoSalon
 
             Console.WriteLine(new string('-', 92));
             Console.WriteLine($"Записів: {count}.");
+        }
+        // Заповнює сховище 6 готовими записами без запитань
+        static void SeedCars()
+        {
+            if (count + 6 > Capacity)
+            {
+                Console.WriteLine("Недостатньо місця для тестових записів.");
+                return;
+            }
+
+            StoreCar("WBA3A5C51CF256985", "BMW", 3, 2019, 85000, "чорний", 950000, true);
+            StoreCar("WAUZZZ4G7EN123456", "Audi", 6, 2017, 120000, "сірий", 780000, false);
+            StoreCar("JTDBR32E720045678", "Toyota", 12, 2021, 40000, "білий", 1150000, false);
+            StoreCar("TMBJJ7NE8L0123456", "Skoda", 21, 2020, 65000, "синій", 690000, true);
+            StoreCar("VF1RFB00X67123456", "Renault", 33, 2016, 150000, "червоний", 420000, false);
+            StoreCar("WBAJA7C50KB654321", "BMW", 5, 2022, 25000, "білий", 1650000, true);
+
+            Console.WriteLine($"Додано 6 тестових записів. Усього записів: {count}.");
         }
     }
 
