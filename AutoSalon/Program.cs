@@ -37,7 +37,7 @@ namespace AutoSalon
                 {
                     case "1": ShowAllCars(); Pause(); break;
                     case "2": AddCar(); Pause(); break;
-                    case "3":
+                    case "3": SearchCars(); Pause(); break;
                     case "4":
                     case "5":
                     case "6":
@@ -371,6 +371,82 @@ namespace AutoSalon
                 }
                 Console.WriteLine("Помилка: введіть «так» або «ні».");
             }
+        }
+        // Шапка таблиці авто
+        static void PrintCarHeader()
+        {
+            Console.WriteLine($"{"№",4} {"VIN",-18}{"Марка",-12}{"Модель",7}{"Рік",6}{"Пробіг",9}  {"Колір",-10}{"Ціна, грн",13}{"Продано",9}");
+            Console.WriteLine(new string('-', 92));
+        }
+
+        // Один рядок таблиці — авто з індексом i
+        static void PrintCarRow(int i)
+        {
+            string mark = sold[i] ? "так" : "ні";
+            Console.WriteLine($"{ids[i],4} {vins[i],-18}{brands[i],-12}{modelCodes[i],7}{years[i],6}{mileages[i],9}  {colors[i],-10}{prices[i],13:F2}{mark,9}");
+        }
+        // Пошук за частиною марки: виводить усі збіги таблицею й кількість знайденого
+        static void SearchByBrand()
+        {
+            string query = ReadText("Частина назви марки: ");
+            int found = 0;                                  // лічильник збігів — до циклу
+
+            for (int i = 0; i < count; i++)
+            {
+                if (brands[i].Contains(query))
+                {
+                    if (found == 0) PrintCarHeader();       // шапку друкуємо тільки при першому збігу
+                    PrintCarRow(i);
+                    found++;
+                }
+            }
+
+            if (found == 0)
+                Console.WriteLine($"Авто з маркою, що містить «{query}», не знайдено.");
+            else
+                Console.WriteLine($"Знайдено: {found}.");
+        }
+        // Пошук за діапазоном ціни; верхня межа не може бути меншою за нижню
+        static void SearchByPrice()
+        {
+            double from = ReadDouble("Ціна від, грн: ", 0, 100000000);
+            double to = ReadDouble("Ціна до, грн: ", 0, 100000000);
+            while (to < from)
+            {
+                Console.WriteLine($"Помилка: верхня межа ({to}) менша за нижню ({from}).");
+                to = ReadDouble("Ціна до, грн: ", 0, 100000000);
+            }
+
+            int found = 0;
+            for (int i = 0; i < count; i++)
+            {
+                if (prices[i] >= from && prices[i] <= to)
+                {
+                    if (found == 0) PrintCarHeader();
+                    PrintCarRow(i);
+                    found++;
+                }
+            }
+
+            if (found == 0)
+                Console.WriteLine($"Авто в діапазоні {from}–{to} грн не знайдено.");
+            else
+                Console.WriteLine($"Знайдено: {found}.");
+        }
+        // Пункт 3: вибір виду пошуку
+        static void SearchCars()
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Сховище порожнє, шукати нічого.");
+                return;
+            }
+            Console.WriteLine("1 — за частиною марки");
+            Console.WriteLine("2 — за діапазоном ціни");
+            int kind = ReadInt("Вид пошуку: ", 1, 2);
+            Console.WriteLine();
+            if (kind == 1) SearchByBrand();
+            else SearchByPrice();
         }
     }
 }
