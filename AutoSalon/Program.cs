@@ -48,6 +48,7 @@ namespace AutoSalon
                     case "11": ShowAbout(); Pause(); break;
                     case "12": RunValueTable(); Pause(); break;
                     case "13": ShowSalesTable(); Pause(); break;
+                    case "14": ShowTotals(); Pause(); break;
                     case "0": Console.WriteLine("До побачення."); running = false; break;
                     default: Console.WriteLine("Немає такого пункту. Спробуйте ще раз."); Pause(); break;
                 }
@@ -77,6 +78,7 @@ namespace AutoSalon
             Console.WriteLine("11 — довідка");
             Console.WriteLine("12 — таблиця залишкової вартості авто");
             Console.WriteLine("13 — таблиця продажів за марками");
+            Console.WriteLine("14 — підсумки");
             Console.WriteLine("0 — вихід");
             Console.Write("Ваш вибір: ");
         
@@ -568,6 +570,56 @@ namespace AutoSalon
             count--;                                           // останній запис тепер поза count
 
             Console.WriteLine($"Авто №{id} видалено. Лишилося записів: {count}.");
+        }
+        // Рахує всі підсумки за ОДИН прохід масиву. Нічого не виводить — результати через out
+        static void CalcTotals(out int total, out int soldCount,
+                               out double maxPrice, out int maxId,
+                               out double minPrice, out int minId,
+                               out double avgPrice)
+        {
+            total = count;
+            soldCount = 0;
+            if (count == 0)                         // порожнє сховище: out-параметрам все одно треба значення
+            {
+                maxPrice = 0; maxId = -1;
+                minPrice = 0; minId = -1;
+                avgPrice = 0;
+                return;
+            }
+
+            maxPrice = prices[0]; maxId = ids[0];   // max і min починаємо з ПЕРШОГО елемента, а не з нуля
+            minPrice = prices[0]; minId = ids[0];
+            double sum = 0;
+
+            for (int i = 0; i < count; i++)         // один-єдиний цикл
+            {
+                sum += prices[i];
+                if (sold[i]) soldCount++;
+                if (prices[i] > maxPrice) { maxPrice = prices[i]; maxId = ids[i]; }
+                if (prices[i] < minPrice) { minPrice = prices[i]; minId = ids[i]; }
+            }
+
+            avgPrice = sum / count;                 // count тут точно > 0
+        }
+        // Пункт 14: виводить підсумки, отримані з CalcTotals
+        static void ShowTotals()
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Сховище порожнє — підсумків немає.");
+                return;
+            }
+
+            CalcTotals(out int total, out int soldCount,
+                       out double maxPrice, out int maxId,
+                       out double minPrice, out int minId,
+                       out double avgPrice);
+
+            Console.WriteLine($"Кількість записів:  {total}");
+            Console.WriteLine($"Продано авто:       {soldCount} з {total}");
+            Console.WriteLine($"Найдорожче авто:    №{maxId}, {maxPrice:F2} грн");
+            Console.WriteLine($"Найдешевше авто:    №{minId}, {minPrice:F2} грн");
+            Console.WriteLine($"Середня ціна:       {avgPrice:F2} грн");
         }
     }
 }
