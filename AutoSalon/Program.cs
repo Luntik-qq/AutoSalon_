@@ -39,7 +39,7 @@ namespace AutoSalon
                     case "2": AddCar(); Pause(); break;
                     case "3": SearchCars(); Pause(); break;
                     case "4": EditCar(); Pause(); break;
-                    case "5":
+                    case "5": DeleteCar(); Pause(); break;
                     case "6":
                     case "7":
                     case "8":
@@ -528,6 +528,46 @@ namespace AutoSalon
             sold[index] = EditYesNo("Чи проданий", sold[index]);
 
             Console.WriteLine($"Авто №{id} оновлено.");
+        }
+        // Пункт 5: видалення авто за номером зі зсувом усіх масивів і підтвердженням
+        static void DeleteCar()
+        {
+            if (count == 0)                                    // перевірка 1: порожнє сховище
+            {
+                Console.WriteLine("Сховище порожнє.");
+                return;
+            }
+
+            int id = ReadInt("Номер авто для видалення: ", 1, int.MaxValue);
+            int index = FindIndexById(id);
+            if (index == -1)                                   // перевірка 2: немає такого номера
+            {
+                Console.WriteLine($"Авто №{id} немає.");
+                return;
+            }
+
+            if (!ReadYesNo($"Видалити авто №{id} ({brands[index]}, {vins[index]})? (так/ні): "))
+            {                                                  // перевірка 3: користувач передумав
+                Console.WriteLine("Скасовано.");
+                return;
+            }
+
+            // зсув: усе, що після index, переїжджає на одну позицію вліво — у ВСІХ масивах
+            for (int i = index; i < count - 1; i++)            // до count - 1, бо беремо i + 1
+            {
+                ids[i] = ids[i + 1];
+                vins[i] = vins[i + 1];
+                brands[i] = brands[i + 1];
+                modelCodes[i] = modelCodes[i + 1];
+                years[i] = years[i + 1];
+                mileages[i] = mileages[i + 1];
+                colors[i] = colors[i + 1];
+                prices[i] = prices[i + 1];
+                sold[i] = sold[i + 1];
+            }
+            count--;                                           // останній запис тепер поза count
+
+            Console.WriteLine($"Авто №{id} видалено. Лишилося записів: {count}.");
         }
     }
 }
