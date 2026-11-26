@@ -38,7 +38,7 @@ namespace AutoSalon
                     case "1": ShowAllCars(); Pause(); break;
                     case "2": AddCar(); Pause(); break;
                     case "3": SearchCars(); Pause(); break;
-                    case "4":
+                    case "4": EditCar(); Pause(); break;
                     case "5":
                     case "6":
                     case "7":
@@ -215,12 +215,7 @@ namespace AutoSalon
                 Console.WriteLine("Помилка: значення не може бути порожнім.");
             }
         }
-      
-        // Читає відповідь «так/ні», повертає true або false
-       
-            
-        
-        // Питає межі та крок і будує таблицю залишкової вартості
+                // Питає межі та крок і будує таблицю залишкової вартості
         static void RunValueTable()
         {
             double from = ReadDouble("Вік від (років): ", 0, 30);
@@ -280,12 +275,10 @@ namespace AutoSalon
                 Console.WriteLine("Записів поки немає.");
                 return;
             }
-            Console.WriteLine($"{"№",4} {"VIN",-18}{"Марка",-12}{"Модель",7}{"Рік",6}{"Пробіг",9}  {"Колір",-10}{"Ціна, грн",13}{"Продано",9}");
-            Console.WriteLine(new string('-', 92));
+            PrintCarHeader();
             for (int i = 0; i < count; i++)                 // до count, а не до Capacity
             {
-                string mark = sold[i] ? "так" : "ні";
-                Console.WriteLine($"{ids[i],4} {vins[i],-18}{brands[i],-12}{modelCodes[i],7}{years[i],6}{mileages[i],9}  {colors[i],-10}{prices[i],13:F2}{mark,9}");
+                PrintCarRow(i);
             }
             Console.WriteLine(new string('-', 92));
             Console.WriteLine($"Записів: {count}.");
@@ -447,6 +440,94 @@ namespace AutoSalon
             Console.WriteLine();
             if (kind == 1) SearchByBrand();
             else SearchByPrice();
+        }
+        // Повертає індекс запису з заданим номером або -1, якщо такого немає
+        static int FindIndexById(int id)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (ids[i] == id) return i;     // знайшли — виходимо одразу
+            }
+            return -1;                          // дійшли до кінця — немає
+        }
+        // Зміна текстового поля: порожній Enter лишає поточне значення
+        static string EditText(string prompt, string current)
+        {
+            Console.Write($"{prompt} [{current}]: ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) return current;
+            return input.Trim();
+        }
+
+        // Зміна цілого поля: порожній Enter або помилка лишають поточне значення
+        static int EditInt(string prompt, int current, int min, int max)
+        {
+            Console.Write($"{prompt} [{current}]: ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) return current;
+            if (int.TryParse(input, out int value) && value >= min && value <= max) return value;
+            Console.WriteLine($"  Некоректне значення (потрібно {min}–{max}), лишаю {current}.");
+            return current;
+        }
+
+        // Зміна дробового поля
+        static double EditDouble(string prompt, double current, double min, double max)
+        {
+            Console.Write($"{prompt} [{current}]: ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) return current;
+            if (double.TryParse(input, out double value) && value >= min && value <= max) return value;
+            Console.WriteLine($"  Некоректне значення (потрібно {min}–{max}), лишаю {current}.");
+            return current;
+        }
+
+        // Зміна поля так/ні
+        static bool EditYesNo(string prompt, bool current)
+        {
+            Console.Write($"{prompt} [{(current ? "так" : "ні")}]: ");
+            string input = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(input)) return current;
+            input = input.Trim().ToLower();
+            if (input.StartsWith("т") || input.StartsWith("y")) return true;
+            if (input.StartsWith("н") || input.StartsWith("n")) return false;
+            Console.WriteLine("  Некоректна відповідь, лишаю як було.");
+            return current;
+        }
+        // Пункт 4: зміна запису за номером. Номер не редагується
+        static void EditCar()
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Сховище порожнє.");
+                return;
+            }
+
+            int id = ReadInt("Номер авто: ", 1, int.MaxValue);
+            int index = FindIndexById(id);
+            if (index == -1)                                   // обов'язкова перевірка перед використанням
+            {
+                Console.WriteLine($"Авто №{id} немає.");
+                return;
+            }
+
+            Console.WriteLine($"Зміна авто №{id}. Порожній Enter — лишити як є.");
+
+            string vin = EditText("VIN", vins[index]);
+            if (vin.Length != 17)
+            {
+                Console.WriteLine("  VIN має містити 17 символів, лишаю старий.");
+                vin = vins[index];
+            }
+            vins[index] = vin.ToUpper();
+            brands[index] = EditText("Марка", brands[index]);
+            modelCodes[index] = EditInt("Код моделі", modelCodes[index], 1, 99);
+            years[index] = EditInt("Рік випуску", years[index], 1950, 2026);
+            mileages[index] = EditInt("Пробіг, км", mileages[index], 0, 1000000);
+            colors[index] = EditText("Колір", colors[index]);
+            prices[index] = EditDouble("Ціна, грн", prices[index], 1, 100000000);
+            sold[index] = EditYesNo("Чи проданий", sold[index]);
+
+            Console.WriteLine($"Авто №{id} оновлено.");
         }
     }
 }
